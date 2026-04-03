@@ -171,8 +171,8 @@ The findings show that credit risk in this portfolio is shaped primarily by thre
 
 The business implication is not that all lending should become more restrictive. Instead, the analysis supports a **more selective and segmented strategy**:
 
-- ✅ Lower-risk customers may continue to be approved efficiently
-- ⚠️ Higher-risk customers can be identified earlier and assessed using tighter criteria
+- Lower-risk customers may continue to be approved efficiently
+- Higher-risk customers can be identified earlier and assessed using tighter criteria
 
 This approach would help the business:
 
@@ -233,10 +233,10 @@ Borrowers should be grouped into clear risk categories based on combinations of 
 
 | Segment | Description |
 |---------|-------------|
-| 🟢 Low Risk | Strong grade, no prior defaults, solid affordability |
-| 🟡 Moderate Risk | Mixed signals; standard review applies |
-| 🟠 High Risk | Multiple risk indicators present |
-| 🔴 Very High Risk | Weak grade, prior default, poor affordability |
+|  Low Risk | Strong grade, no prior defaults, solid affordability |
+|  Moderate Risk | Mixed signals; standard review applies |
+|  High Risk | Multiple risk indicators present |
+|  Very High Risk | Weak grade, prior default, poor affordability |
 
 **Expected measurable outcomes:**
 - Improve consistency in lending decisions

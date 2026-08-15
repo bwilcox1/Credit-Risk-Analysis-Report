@@ -290,8 +290,7 @@ The findings suggest that the business can improve portfolio performance by focu
 
 > 📊 **[Dashboard Placeholder]**
 >
-> _Insert interactive dashboard here (e.g. Power BI embed, Tableau Public link, or Streamlit app)._
->
+> 
 > **Suggested panels:**
 > - Overall default rate (KPI card — 21.8%)
 > - Default rate by loan grade (bar chart)
@@ -306,7 +305,7 @@ The findings suggest that the business can improve portfolio performance by focu
 
 > 📋 **[Spreadsheet Placeholder]**
 >
-> _Attach or link the underlying data workbook here (e.g. Excel / Google Sheets)._
+> 
 >
 > **Suggested tabs:**
 > - `Raw Data` — cleaned dataset (32,581 records)

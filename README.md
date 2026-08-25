@@ -1,321 +1,170 @@
 # Credit Risk Analysis Report
 
----
+> **Project status:** Work in progress. The analysis narrative is available, while the final workbook and dashboard images are undergoing quality checks before publication.
 
-## Table of Contents
+## Project overview
 
-1. [Introduction](#1-introduction)
-2. [Dataset Overview](#2-dataset-overview)
-3. [Data Preparation](#3-data-preparation)
-4. [Key Findings](#4-key-findings)
-   - [4.1 Loan Grade](#41-loan-grade-is-a-major-driver-of-default-risk)
-   - [4.2 Previous Default History](#42-previous-default-history-is-a-strong-warning-sign)
-   - [4.3 Affordability Pressure](#43-affordability-pressure-is-closely-linked-to-default)
-   - [4.4 Home Ownership Status](#44-home-ownership-status-provides-useful-risk-context)
-   - [4.5 Risk Concentration](#45-risk-is-concentrated-in-identifiable-borrower-groups)
-   - [4.6 Data Quality](#46-data-quality-should-be-improved-before-operational-rollout)
-5. [Business Implications](#5-business-implications)
-6. [Recommendations](#6-recommendations)
-7. [Conclusion](#7-conclusion)
-8. [Visualisations](#8-visualisations)
+This project examines a credit-risk portfolio to identify the borrower and loan characteristics most strongly associated with default. The goal is to turn the analysis into practical guidance for underwriting, affordability assessment, portfolio monitoring, and data-quality improvement.
 
----
+The analysis addresses one central question:
 
-## 1. Introduction
+> Which customer and loan characteristics are most strongly linked to default, and how can these insights support better lending decisions?
 
-This report presents the findings from an analysis of the credit risk dataset, with the aim of identifying the main factors associated with loan default and highlighting actions the business can take to improve lending decisions. The analysis focused on borrower characteristics, loan features, affordability measures, and repayment outcomes to understand where risk is concentrated within the portfolio.
+## Portfolio snapshot
 
-The central question guiding this work was:
+| Metric | Result |
+|---|---:|
+| Loan records | 32,581 |
+| Variables | 29 |
+| Defaulted loans | 7,108 |
+| Overall default rate | 21.8% |
 
-> **Which customer and loan characteristics are most strongly linked to default, and how can the company use these insights to reduce portfolio risk while improving decision-making?**
-
-The analysis is intended to support stakeholders in understanding the scale of current credit risk, the segments contributing most to default, and the practical steps that can be taken to strengthen risk management, underwriting, and monitoring processes.
-
----
-
-## 2. Dataset Overview
-
-The dataset contained **32,581 loan records** and **29 variables**, covering a mix of borrower demographics, financial profile, loan characteristics, and repayment outcome.
-
-The main target variable used throughout the analysis was `loan_status`, where:
+`loan_status` is the target variable:
 
 | Value | Meaning |
-|-------|---------|
+|---:|---|
 | `0` | Non-default |
 | `1` | Default |
 
-### Variables Included
+The average interest-rate result is intentionally excluded from this summary until the handling of missing interest-rate values has passed final validation.
 
-| Category | Variables |
-|----------|-----------|
-| Borrower Demographics | `age`, `home_ownership`, `employment_length` |
-| Financial Profile | `income`, `debt_to_income_ratio` |
-| Loan Characteristics | `loan_amount`, `interest_rate`, `loan_purpose`, `loan_grade` |
-| Affordability Measures | `loan_to_income_ratio`, `loan_percent_income` |
-| Repayment History | `previous_default_history` |
+## Tools and techniques
 
-This provided a strong basis for analysing default behaviour across different customer groups and financial conditions.
+- Microsoft Excel
+- Excel Tables and structured formulas
+- Data cleaning and quality checks
+- PivotTables and PivotCharts
+- KPI and dashboard design
+- Descriptive and segmented risk analysis
 
----
+## Dataset fields
 
-## 3. Data Preparation
+Examples of the main source fields include:
 
-Before conducting the analysis, the dataset was reviewed for completeness, consistency, and unusual values. This step was necessary to ensure that the findings were based on reasonable and interpretable data.
+| Category | Fields |
+|---|---|
+| Borrower profile | `person_age`, `person_income`, `person_home_ownership`, `person_emp_length` |
+| Loan characteristics | `loan_intent`, `loan_grade`, `loan_amnt`, `loan_int_rate`, `loan_percent_income` |
+| Credit history | `cb_person_default_on_file`, `cb_person_cred_hist_length` |
+| Outcome | `loan_status` |
 
-### Issues Identified
+The workbook also contains additional borrower, location, debt, utilisation, and segmentation fields used for exploratory analysis.
 
-| Issue | Detail |
-|-------|--------|
-| Missing values — `loan_int_rate` | ~9.6% of records affected |
-| Missing values — `person_emp_length` | ~2.8% of records affected |
-| Unrealistic outliers | Borrower ages above 100; employment lengths above 100 years |
-| Overlapping variables | `loan_percent_income` and `loan_to_income_ratio` appear to capture similar information |
+## Analysis workflow
 
-> **Note:** These issues did not prevent analysis, but they should be addressed if the dataset is to be used in operational reporting or predictive modelling on a live basis. The quality review showed that while the dataset is suitable for insight generation, stronger input controls and validation checks would improve reliability in future use.
+1. Reviewed field names, types, missing values, and unusual records.
+2. Preserved the original source data on a separate worksheet.
+3. Created a cleaned analysis table and derived labels for reporting.
+4. Reconciled record counts and default totals against the source data.
+5. Used PivotTables to compare default rates across borrower and loan segments.
+6. Designed a dashboard to communicate the most decision-relevant findings.
 
----
+## Data-quality findings
 
-## 4. Key Findings
+| Issue | Observation | Treatment for analysis |
+|---|---|---|
+| Missing `loan_int_rate` | Approximately 9.6% of records | Keep missing values distinct from genuine zero rates and disclose the exclusion in rate calculations |
+| Missing `person_emp_length` | Approximately 2.8% of records | Retain as missing or assign an explicit unknown category for segmented reporting |
+| Unusual age and employment values | Some values exceed plausible human ranges | Flag for review rather than silently deleting records |
+| Similar affordability measures | `loan_percent_income` and other loan-to-income measures may overlap | Define each measure clearly before using both in the same decision rule |
 
-### 4.1 Loan Grade is a Major Driver of Default Risk
+These limitations do not prevent exploratory analysis, but they should be resolved before the workbook is used for automated lending decisions or predictive modelling.
 
-One of the clearest findings in the dataset was the relationship between loan grade and default. Default rates rose sharply as loan grade worsened.
+## Preliminary findings
 
-| Loan Grade | Approx. Default Rate |
-|------------|----------------------|
-| A | ~10% |
-| B | Low–moderate |
-| C–D | Moderate–high |
-| E–F | High |
-| G | ~98% |
+### Loan grade separates risk
 
-This is a very strong separation in performance. It shows that the grade system is already capturing meaningful differences in borrower quality and credit risk. It also suggests that the business has an opportunity to make more structured use of loan grades in approval decisions, exception handling, pricing, and post-approval monitoring.
+Default rates increase as loan grade weakens. This indicates that loan grade is an important segmentation variable for underwriting, pricing, exception handling, and monitoring. Results for grades with small borrower counts should be interpreted cautiously.
 
-The scale of difference between the best and worst grades is particularly important. A Grade G borrower is many times more likely to default than a Grade A borrower, meaning that high-risk grades contribute disproportionately to portfolio losses.
+### Previous default history is an important warning signal
 
----
+Borrowers with a previous default on file show materially higher risk than borrowers without one. Previous default history should therefore be treated as a prominent review flag alongside affordability and current loan characteristics.
 
-### 4.2 Previous Default History is a Strong Warning Sign
+### Affordability pressure is associated with default
 
-Borrowers with a previous default on file showed significantly worse repayment performance than customers with no prior default history. This was one of the **strongest behavioural signals** in the dataset.
+Default risk is higher among financially stretched borrowers, including customers with lower income or a larger loan burden relative to income. This supports stronger affordability checks and clearly documented thresholds.
 
-This finding aligns with the broader principle that past repayment behaviour is often a strong indicator of future credit performance. Customers who have already demonstrated difficulty repaying credit obligations appear to present a substantially higher risk of defaulting again.
+### Home ownership adds context
 
-> **Business Implication:** Prior default history should not be treated as a minor background variable. It should instead be considered a **core risk flag** within the underwriting process. Applications from customers with a previous default record should receive more careful review, and where appropriate, tighter lending limits or enhanced affordability checks.
+Default behaviour varies across home-ownership groups. Home ownership should not be used as a standalone approval rule, but it may provide useful context when considered with income, debt burden, loan grade, and repayment history.
 
----
+### Risk is concentrated rather than evenly distributed
 
-### 4.3 Affordability Pressure is Closely Linked to Default
+The portfolio contains identifiable combinations of risk indicators, particularly weak loan grades, prior defaults, and affordability pressure. Targeted review of these segments is likely to be more useful than applying the same restriction to every borrower.
 
-The analysis showed that repayment risk is strongly associated with financial pressure, particularly among borrowers with:
+## Business recommendations
 
-- Lower income
-- Higher debt-to-income ratios
-- Higher loan-to-income ratios
+1. Apply enhanced review to weaker loan grades and document all policy exceptions.
+2. Use previous default history as a mandatory escalation flag rather than a minor background field.
+3. Define and test affordability thresholds using income, loan amount, and debt-to-income measures.
+4. Create consistent low-, moderate-, high-, and very-high-risk segments for reporting and monitoring.
+5. Monitor borrowers with multiple risk indicators earlier in the loan lifecycle.
+6. Add validation rules for missing values, impossible ranges, and inconsistent field definitions.
 
-This suggests that affordability plays a central role in repayment outcomes. Borrowers who are already stretched relative to their income are more vulnerable to missing payments and falling into default.
+These are analysis-led recommendations, not guaranteed performance forecasts. Any proposed policy should be tested on representative historical data before implementation.
 
-This is especially important because it points to a **controllable area** for the business. While external economic conditions may affect borrowers, the company can reduce exposure by strengthening affordability checks during the approval process.
+## Visualisations
 
-The findings also suggest that the size of the loan relative to a borrower's income matters significantly. Larger loans may be suitable for some applicants, but for lower-income borrowers or those carrying higher debt burdens, the same loan size may represent far greater risk.
+The final visuals will be inserted here after the workbook totals and missing-value treatment are validated.
 
----
+Planned image locations:
 
-### 4.4 Home Ownership Status Provides Useful Risk Context
-
-Another meaningful finding was the difference in default rates by home ownership status. Borrowers in **rented accommodation had higher default rates** than those who owned a home or had a mortgage.
-
-This does not mean home ownership alone should determine lending decisions. However, it does appear to act as a useful proxy for financial stability or resilience. Renters may face greater financial pressure, less wealth protection, or fewer buffers against income shocks than homeowners.
-
-As a result, home ownership should be viewed as a **contextual risk factor**. When combined with low income, high debt burden, or prior default history, it may help identify customers who need closer review.
-
----
-
-### 4.5 Risk is Concentrated in Identifiable Borrower Groups
-
-A key strategic finding from the analysis is that default is **not evenly distributed** across the portfolio. Instead, it is concentrated within particular segments, especially borrowers with combinations of:
-
-- Weak loan grades
-- Prior defaults
-- Low affordability
-- High financial stress
-- Rented housing status
-
-> **Strategic Takeaway:** The company does not need to apply blanket tightening across the full portfolio. A more targeted approach would likely be more effective. By focusing policy changes on the riskiest segments, the business can reduce default exposure without unnecessarily restricting lending to stronger customers.
-
----
-
-### 4.6 Data Quality Should be Improved Before Operational Rollout
-
-Although the analysis produced clear and useful findings, a number of data quality issues were identified that would need to be addressed before using the dataset in an automated or production-based decision environment.
-
-**Main concerns:**
-- Missing interest rate values
-- Missing employment length values
-- Unrealistic outliers in age and employment length
-- Overlapping variables measuring similar affordability concepts
-
-> These issues do not invalidate the analysis, but they do reduce confidence in any system that would rely on the data for repeatable operational decisions. Stronger field validation, completeness checks, and outlier controls should be introduced as part of future data governance improvements.
-
----
-
-## 5. Business Implications
-
-The findings show that credit risk in this portfolio is shaped primarily by three broad factors:
-
-```
-1. Loan quality (grade)
-2. Repayment history (prior defaults)
-3. Affordability pressure (income, DTI, LTI)
+```text
+assets/credit-risk-dashboard.png
+assets/default-rate-by-grade.png
+assets/default-rate-by-history.png
+assets/default-rate-by-home-ownership.png
 ```
 
-The business implication is not that all lending should become more restrictive. Instead, the analysis supports a **more selective and segmented strategy**:
+Recommended README placement:
 
-- Lower-risk customers may continue to be approved efficiently
-- Higher-risk customers can be identified earlier and assessed using tighter criteria
+1. Put the complete dashboard immediately below this section.
+2. Place the grade chart beside the loan-grade finding.
+3. Place the previous-default chart beside the previous-default finding.
+4. Place the home-ownership chart beside the home-ownership finding.
 
-This approach would help the business:
+Example Markdown to use after an image is uploaded:
 
-- Reduce default exposure
-- Improve consistency in approval decisions
-- Prioritise collections and monitoring resources more effectively
-- Improve overall portfolio quality without applying blunt restrictions across the whole customer base
+```markdown
+![Credit risk dashboard](assets/credit-risk-dashboard.png)
+```
 
----
+## Repository structure
 
-## 6. Recommendations
+```text
+Credit-Risk-Analysis-Report/
+|-- README.md
+|-- data/
+|   `-- Credit-Risk-Analysis.xlsx
+`-- assets/
+    |-- credit-risk-dashboard.png
+    |-- default-rate-by-grade.png
+    |-- default-rate-by-history.png
+    `-- default-rate-by-home-ownership.png
+```
 
-### 6.1 Introduce Stricter Review Rules for Weaker Loan Grades
+The `data` and `assets` folders will be added when the final workbook and exported visualisations pass quality checks.
 
-The company should use loan grade more actively in decision-making. Lower grades (especially **E to G**) should trigger enhanced review or require additional justification before approval.
+## Validation checklist
 
-**Expected measurable outcomes:**
+- [x] Reconcile total records: 32,581
+- [x] Reconcile defaults: 7,108
+- [x] Reconcile overall default rate: 21.8%
+- [ ] Finalise the treatment of missing interest-rate values
+- [ ] Refresh and validate every PivotTable
+- [ ] Confirm dashboard KPIs match the source totals
+- [ ] Export and upload dashboard images
+- [ ] Upload the final reviewed workbook
+- [ ] Add the original dataset source link and usage terms
 
-| Metric | Expected Impact |
-|--------|----------------|
-| Approvals in weakest grades | Reduce by 10–20% |
-| Default in those segments | Reduce by 5–15% |
-| Overall portfolio default rate | Improve by ~1–3 percentage points |
+## Limitations
 
----
+- The analysis is descriptive and does not establish causation.
+- Missing values and unusual records can affect segment-level results.
+- Results should be validated on additional data before being used as lending policy.
+- Precise improvement targets require historical testing and should not be presented as guaranteed outcomes.
 
-### 6.2 Make Previous Default History a Mandatory Escalation Trigger
+## Conclusion
 
-Applications from borrowers with prior defaults should be automatically flagged for deeper review.
-
-**Expected measurable outcomes:**
-
-| Metric | Expected Impact |
-|--------|----------------|
-| Exposure to repeat-defaulter segments | Reduce by 15–25% |
-| Defaults from prior-default customers | Lower by 10–20% |
-| Collections & monitoring allocation | Improved focus |
-
----
-
-### 6.3 Strengthen Affordability Checks Using DTI and LTI Thresholds
-
-Affordability measures should be used more explicitly in approval rules. Borrowers with high debt-to-income or high loan-to-income levels should be subject to tighter controls.
-
-**Expected measurable outcomes:**
-
-| Metric | Expected Impact |
-|--------|----------------|
-| Default among financially stretched borrowers | Reduce by 8–15% |
-| Loan quality in lower-income segments | Improved |
-| Losses driven by poor affordability assessment | Reduced |
-
----
-
-### 6.4 Create a Formal Risk Segmentation Framework
-
-Borrowers should be grouped into clear risk categories based on combinations of loan grade, affordability, prior default history, and key borrower profile indicators.
-
-| Segment | Description |
-|---------|-------------|
-|  Low Risk | Strong grade, no prior defaults, solid affordability |
-|  Moderate Risk | Mixed signals; standard review applies |
-|  High Risk | Multiple risk indicators present |
-|  Very High Risk | Weak grade, prior default, poor affordability |
-
-**Expected measurable outcomes:**
-- Improve consistency in lending decisions
-- Reduce manual review time for low-risk applications by 15–30%
-- Improve focus on high-risk cases, leading to earlier intervention
-
----
-
-### 6.5 Apply Earlier Monitoring to Vulnerable Borrower Groups
-
-Borrowers with multiple risk signals should be monitored more closely after approval, especially in the early stages of the loan.
-
-**Expected measurable outcomes:**
-- Improve early arrears intervention
-- Reduce progression from missed payment to full default
-- Strengthen recovery performance in the highest-risk segments
-
----
-
-### 6.6 Improve Data Quality Controls
-
-Before the analysis is used operationally, input validation and reporting standards should be strengthened.
-
-**Expected measurable outcomes:**
-
-| Metric | Target |
-|--------|--------|
-| Missing-field rates | Reduce to below 2% |
-| Dashboard & scorecard confidence | Improved |
-| Readiness for predictive modelling | Stronger foundation |
-
----
-
-## 7. Conclusion
-
-This analysis shows that loan default risk is substantial within the portfolio, with an **overall default rate of 21.8%**. More importantly, the risk is not spread evenly — it is concentrated in identifiable borrower groups, particularly those with:
-
-- Weaker loan grades
-- Previous default history
-- Stronger signs of affordability stress
-
-The findings suggest that the business can improve portfolio performance by focusing on **targeted interventions** rather than broad restrictions. Stronger use of loan grade, tighter treatment of prior-default borrowers, more rigorous affordability checks, and clearer risk segmentation would all help reduce credit losses while preserving a more balanced lending strategy.
-
-> **Summary:** The dataset provides clear evidence that better segmentation and more focused credit controls could support lower default rates, improved decision consistency, and stronger portfolio quality over time.
-
----
-
-## 8. Visualisations
-
-### 8.1 Dashboard
-
-> 📊 **[Dashboard Placeholder]**
->
-> 
-> **Suggested panels:**
-> - Overall default rate (KPI card — 21.8%)
-> - Default rate by loan grade (bar chart)
-> - Default rate by prior default history (grouped bar)
-> - Default rate by home ownership status (pie / bar)
-> - Debt-to-income distribution by default outcome (box plot or histogram)
-> - Risk segment distribution across portfolio (stacked bar)
-
----
-
-### 8.2 Spreadsheet Data
-
-> 📋 **[Spreadsheet Placeholder]**
->
-> 
->
-> **Suggested tabs:**
-> - `Raw Data` — cleaned dataset (32,581 records)
-> - `Default by Grade` — summary table of default rates per loan grade
-> - `Segment Summary` — borrower counts and default rates by risk segment
-> - `Affordability Metrics` — DTI / LTI breakdowns by default status
-> - `Recommendations Tracker` — measurable outcomes per recommendation
-
----
-
-*Report prepared for internal stakeholder review. Data sourced from the credit risk loan dataset (32,581 records, 29 variables).*
-
+The portfolio has an overall default rate of **21.8%**, with risk concentrated among identifiable borrower groups. Loan grade, previous default history, and affordability measures provide useful signals for more consistent underwriting and targeted monitoring. The next stage is to complete the workbook quality review, confirm every dashboard figure, and publish the supporting workbook and visualisations.
 

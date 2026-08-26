@@ -105,7 +105,17 @@ These are analysis-led recommendations, not guaranteed performance forecasts. An
 
 ## Visualisations
 
-The final visuals will be inserted here after the workbook totals and missing-value treatment are validated.
+### Credit Risk Dashboard
+
+The complete dashboard will be inserted directly below this heading after the workbook totals and missing-value treatment are validated.
+
+```markdown
+![Credit risk dashboard](assets/credit-risk-dashboard.png)
+```
+
+### Supporting Charts
+
+The supporting charts will be placed beside the corresponding findings after validation.
 
 Planned image locations:
 
@@ -122,12 +132,6 @@ Recommended README placement:
 2. Place the grade chart beside the loan-grade finding.
 3. Place the previous-default chart beside the previous-default finding.
 4. Place the home-ownership chart beside the home-ownership finding.
-
-Example Markdown to use after an image is uploaded:
-
-```markdown
-![Credit risk dashboard](assets/credit-risk-dashboard.png)
-```
 
 ## Repository structure
 
